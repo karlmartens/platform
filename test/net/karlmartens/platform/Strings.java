@@ -22,7 +22,7 @@ package net.karlmartens.platform;
  * @author karl
  * 
  */
-public final class TestSummarizer {
+public final class Strings {
 
   public static String lines(String... lines) {
     final StringBuilder builder = new StringBuilder();

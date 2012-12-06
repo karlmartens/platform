@@ -30,7 +30,7 @@ import static net.karlmartens.platform.datatable.DataTableColumn.Type.STRING;
 import static net.karlmartens.platform.datatable.DataTableColumn.Type.TIME_OF_DAY;
 import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
-import net.karlmartens.platform.TestSummarizer;
+import net.karlmartens.platform.Strings;
 import net.karlmartens.platform.util.Range;
 
 import org.joda.time.LocalDate;
@@ -51,7 +51,7 @@ public class DataTableTest {
     table.addColumn(STRING);
     table.addColumn(NUMBER);
 
-    assertEquals(TestSummarizer.lines(//
+    assertEquals(Strings.lines(//
         "{", //
         "  \"cols\": [", //
         "    {", //
@@ -71,7 +71,7 @@ public class DataTableTest {
     table.addColumn(STRING, "Column A");
     table.addColumn(NUMBER, "Column B");
 
-    assertEquals(TestSummarizer.lines(//
+    assertEquals(Strings.lines(//
         "{", //
         "  \"cols\": [", //
         "    {", //
@@ -97,7 +97,7 @@ public class DataTableTest {
     table.addColumn(TIME_OF_DAY, "Column E", "E");
     table.addColumn(DATE_TIME, "Column F", "F");
 
-    assertEquals(TestSummarizer.lines(//
+    assertEquals(Strings.lines(//
         "{", //
         "  \"cols\": [", //
         "    {", //
@@ -148,7 +148,7 @@ public class DataTableTest {
         .pattern("#,##0")//
         .role(DATA));
 
-    assertEquals(TestSummarizer.lines(//
+    assertEquals(Strings.lines(//
         "{", //
         "  \"cols\": [", //
         "    {", //
@@ -183,7 +183,7 @@ public class DataTableTest {
         23, 15, 37), new LocalDateTime(2012, 1, 1, 13, 23, 15, 37));
     table.addRow("Blue", 15.7, FALSE);
 
-    assertEquals(TestSummarizer.lines(//
+    assertEquals(Strings.lines(//
         "{", //
         "  \"cols\": [", //
         "    {", //
@@ -275,7 +275,7 @@ public class DataTableTest {
         .value("Green")//
         .formattedValue("G"), 10.23);
 
-    assertEquals(TestSummarizer.lines(//
+    assertEquals(Strings.lines(//
         "{", //
         "  \"cols\": [", //
         "    {", //
@@ -316,7 +316,7 @@ public class DataTableTest {
 
     table.addRows(r0, r1);
 
-    assertEquals(TestSummarizer.lines(//
+    assertEquals(Strings.lines(//
         "{", //
         "  \"cols\": [", //
         "    {", //
@@ -354,7 +354,7 @@ public class DataTableTest {
     final DataTable table = new DataTable();
     table.addRows(3);
 
-    assertEquals(TestSummarizer.lines(//
+    assertEquals(Strings.lines(//
         "{", //
         "  \"cols\": [],", //
         "  \"rows\": [", //
@@ -754,7 +754,7 @@ public class DataTableTest {
     table.addRow("Apple", 1.0);
 
     assertArrayEquals(new int[] { 1, 6, 3, 0, 5, 2, 4 }, table.getSortedRows(0));
-    assertEquals(TestSummarizer.lines(//
+    assertEquals(Strings.lines(//
         "{", //
         "  \"cols\": [", //
         "    {", //
@@ -976,7 +976,7 @@ public class DataTableTest {
     table.insertColumn(1, NUMBER);
     table.insertColumn(1, DATE);
 
-    assertEquals(TestSummarizer.lines(//
+    assertEquals(Strings.lines(//
         "{", //
         "  \"cols\": [", //
         "    {", //
@@ -1000,7 +1000,7 @@ public class DataTableTest {
     table.insertColumn(1, NUMBER, "B");
     table.insertColumn(1, DATE, "C");
 
-    assertEquals(TestSummarizer.lines(//
+    assertEquals(Strings.lines(//
         "{", //
         "  \"cols\": [", //
         "    {", //
@@ -1027,7 +1027,7 @@ public class DataTableTest {
     table.insertColumn(1, NUMBER, "B", "_B");
     table.insertColumn(1, DATE, "C", "_C");
 
-    assertEquals(TestSummarizer.lines(//
+    assertEquals(Strings.lines(//
         "{", //
         "  \"cols\": [", //
         "    {", //
@@ -1060,7 +1060,7 @@ public class DataTableTest {
     table.insertColumn(1, new DataTableColumn(DATE).id("_C").label("C")
         .pattern("yyyy-mm-dd").role(DATA));
 
-    assertEquals(TestSummarizer.lines(//
+    assertEquals(Strings.lines(//
         "{", //
         "  \"cols\": [", //
         "    {", //
@@ -1093,7 +1093,7 @@ public class DataTableTest {
     final DataTable table = new DataTable();
     table.insertRows(0, 2);
 
-    assertEquals(TestSummarizer.lines(//
+    assertEquals(Strings.lines(//
         "{", //
         "  \"cols\": [],", //
         "  \"rows\": [", //
@@ -1115,7 +1115,7 @@ public class DataTableTest {
     table.addRow("A");
     table.insertRows(0, 2);
 
-    assertEquals(TestSummarizer.lines(//
+    assertEquals(Strings.lines(//
         "{", //
         "  \"cols\": [", //
         "    {", //
@@ -1152,7 +1152,7 @@ public class DataTableTest {
     table.addRow("A");
     table.insertRows(1, 2);
 
-    assertEquals(TestSummarizer.lines(//
+    assertEquals(Strings.lines(//
         "{", //
         "  \"cols\": [", //
         "    {", //
@@ -1194,7 +1194,7 @@ public class DataTableTest {
 
     table.insertRows(0, r0, r1);
 
-    assertEquals(TestSummarizer.lines(//
+    assertEquals(Strings.lines(//
         "{", //
         "  \"cols\": [", //
         "    {", //
@@ -1234,7 +1234,7 @@ public class DataTableTest {
 
     table.insertRows(0, r0, r1);
 
-    assertEquals(TestSummarizer.lines(//
+    assertEquals(Strings.lines(//
         "{", //
         "  \"cols\": [", //
         "    {", //
@@ -1281,7 +1281,7 @@ public class DataTableTest {
 
     table.insertRows(1, r0, r1);
 
-    assertEquals(TestSummarizer.lines(//
+    assertEquals(Strings.lines(//
         "{", //
         "  \"cols\": [", //
         "    {", //
