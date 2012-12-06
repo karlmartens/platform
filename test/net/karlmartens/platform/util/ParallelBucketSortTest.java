@@ -18,9 +18,9 @@
 
 package net.karlmartens.platform.util;
 
-import org.junit.Test;
+import junit.framework.Assert;
 
-import net.karlmartens.tools.testing.TestSummarizer;
+import org.junit.Test;
 
 public final class ParallelBucketSortTest {
 
@@ -31,30 +31,22 @@ public final class ParallelBucketSortTest {
       arr[i] = Integer.valueOf(i);
     }
     
-    final String[] expected = format(arr);
+    final String expected = format(arr);
     
     ArraySupport.shuffle(arr);
-    ParallelBucketSort.sort(arr);
     
-    final TestSummarizer summarizer = new TestSummarizer();
-    summarizer.expected(expected);
-    summarize(arr, summarizer);
-    summarizer.check();
+    Assert.assertFalse(expected.equals(format(arr)));
+    
+    ParallelBucketSort.sort(arr);
+    Assert.assertEquals(expected, format(arr));
   }
 
-  private static String[] format(Integer[] arr) {
-    final String[] result = new String[arr.length];
+  private static String format(Integer[] arr) {
+    final StringBuilder result = new StringBuilder();
     for (int i=0; i<arr.length; i++) {
-      result[i] = String.format("%1$d", arr[i]);
+      result.append(String.format("%1$d\n", arr[i]));
     }
-    return result;
-  }
-
-  private static void summarize(Integer[] arr, TestSummarizer summarizer) {
-    final String[] actuals = format(arr);
-    for (String a : actuals) {
-      summarizer.actual("%1$s", a);
-    }
+    return result.toString();
   }
   
 }
