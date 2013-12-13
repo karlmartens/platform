@@ -1,5 +1,5 @@
 /**
- *   Copyright 2011 Karl Martens
+ *   Copyright 2013 Karl Martens
  *
  *   Licensed under the Apache License, Version 2.0 (the "License");
  *   you may not use this file except in compliance with the License.
@@ -16,34 +16,30 @@
  *   net.karlmartens.platform, is a library of shared basic utility classes
  */
 
-package net.karlmartens.platform.util;
+package net.karlmartens.platform.function;
 
 import java.util.Comparator;
 
-import net.karlmartens.platform.function.Pair;
+/**
+ * @author kmartens
+ *
+ */
+class MaxFunction<T> implements Function<Pair<T, T>, T> {
 
-public class PairKeyComparator<K, V> implements Comparator<Pair<K, V>> {
-  
-  private final Comparator<K> _comparator;
-  
-  public PairKeyComparator(Comparator<K> comparator) {
+  private final Comparator<T> _comparator;
+
+  MaxFunction(Comparator<T> comparator) {
     _comparator = comparator;
   }
-
+  
   @Override
-  public int compare(Pair<K, V> o1, Pair<K, V> o2) {
-    if (o1 == o2)
-      return 0;
+  public T apply(Pair<T, T> arg) {
+    final T a = arg.a();
+    final T b = arg.b();
+    if (_comparator.compare(a, b) >= 0)
+      return a;
     
-    if (o1 == null)
-      return -1;
-    
-    if (o2 == null)
-      return 1;
-    
-    final K k1 = o1.a();
-    final K k2 = o2.a();
-    return _comparator.compare(k1, k2);
+    return b;
   }
 
 }

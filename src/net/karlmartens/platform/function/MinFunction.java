@@ -1,5 +1,5 @@
 /**
- *   Copyright 2012 Karl Martens
+ *   Copyright 2013 Karl Martens
  *
  *   Licensed under the Apache License, Version 2.0 (the "License");
  *   you may not use this file except in compliance with the License.
@@ -16,24 +16,30 @@
  *   net.karlmartens.platform, is a library of shared basic utility classes
  */
 
-package net.karlmartens.platform;
+package net.karlmartens.platform.function;
+
+import java.util.Comparator;
 
 /**
- * @author karl
- * 
+ * @author kmartens
+ *
  */
-public final class Strings {
+class MinFunction<T> implements Function<Pair<T, T>, T> {
 
-  public static String lines(String... lines) {
-    final StringBuilder builder = new StringBuilder();
-    for (String line : lines) {
-      if (builder.length() > 0)
-        builder.append("\n");
+  private final Comparator<T> _comparator;
 
-      builder.append(line);
-    }
-
-    return builder.toString();
+  MinFunction(Comparator<T> comparator) {
+    _comparator = comparator;
+  }
+  
+  @Override
+  public T apply(Pair<T, T> arg) {
+    final T a = arg.a();
+    final T b = arg.b();
+    if (_comparator.compare(a, b) <= 0)
+      return a;
+    
+    return b;
   }
 
 }

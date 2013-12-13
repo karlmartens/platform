@@ -21,14 +21,16 @@ import java.text.BreakIterator;
 import java.text.Collator;
 import java.text.NumberFormat;
 import java.text.ParseException;
+import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.List;
 
 public final class NumberStringComparator implements Comparator<String> {
 
   private final NumberFormat _format;
   private final Collator _collator;
   private final double _tolerance;
-  private final BreakIterator[] _bi;
+  private final BreakIterator _bi;
 
   public NumberStringComparator() {
     this(NumberFormat.getInstance());
@@ -44,11 +46,12 @@ public final class NumberStringComparator implements Comparator<String> {
     return c;
   }
 
-  public NumberStringComparator(NumberFormat format, Collator collator, double tolerance) {
+  public NumberStringComparator(NumberFormat format, Collator collator,
+      double tolerance) {
     _format = format;
     _collator = collator;
     _tolerance = tolerance;
-    _bi = new BreakIterator[] { BreakIterator.getWordInstance(), BreakIterator.getWordInstance() };
+    _bi = BreakIterator.getWordInstance();
   }
 
   @Override
@@ -62,37 +65,13 @@ public final class NumberStringComparator implements Comparator<String> {
     if (o2 == null)
       return 1;
 
-    _bi[0].setText(o1);
-    _bi[1].setText(o2);
+    final String[] w1 = words(o1);
+    final String[] w2 = words(o2);
 
-    int current1 = _bi[0].first();
-    int current2 = _bi[1].first();
-    for (;;) {
-      if (current1 == BreakIterator.DONE) {
-        if (current2 == BreakIterator.DONE) {
-          return 0;
-        }
-
-        return -1;
-      }
-
-      if (current2 == BreakIterator.DONE)
-        return 1;
-
-      int next1 = _bi[0].following(current1);
-      if (next1 == BreakIterator.DONE)
-        next1 = o1.length();
-
-      int next2 = _bi[1].following(current2);
-      if (next2 == BreakIterator.DONE)
-        next2 = o2.length();
-
-      final String w1 = o1.substring(current1, next1);
-      final String w2 = o2.substring(current2, next2);
-
+    for (int i = 0; i < Math.min(w1.length, w2.length); i++) {
       try {
-        final double n1 = _format.parse(w1).doubleValue();
-        final double n2 = _format.parse(w2).doubleValue();
+        final double n1 = _format.parse(w1[i]).doubleValue();
+        final double n2 = _format.parse(w2[i]).doubleValue();
         if (Math.abs(n1 - n2) > _tolerance) {
           if (n1 < n2) {
             return -1;
@@ -104,12 +83,28 @@ public final class NumberStringComparator implements Comparator<String> {
         // Ignore error compare string with base comparator
       }
 
-      final int c = _collator.compare(w1, w2);
+      final int c = _collator.compare(w1[i], w2[i]);
       if (c != 0)
         return c;
-
-      current1 = _bi[0].next();
-      current2 = _bi[1].next();
     }
+
+    return w1.length - w2.length;
+  }
+
+  private String[] words(String text) {
+    final List<String> result = new ArrayList<>();
+    _bi.setText(text);
+
+    int start = _bi.first();
+    int end = _bi.next();
+    while (end != BreakIterator.DONE) {
+      String word = text.substring(start, end);
+      if (Character.isLetterOrDigit(word.charAt(0))) {
+        result.add(word);
+      }
+      start = end;
+      end = _bi.next();
+    }
+    return result.toArray(new String[0]);
   }
 }

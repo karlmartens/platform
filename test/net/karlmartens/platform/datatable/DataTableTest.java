@@ -30,7 +30,7 @@ import static net.karlmartens.platform.datatable.DataTableColumn.Type.STRING;
 import static net.karlmartens.platform.datatable.DataTableColumn.Type.TIME_OF_DAY;
 import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
-import net.karlmartens.platform.Strings;
+import net.karlmartens.platform.function.Strings;
 import net.karlmartens.platform.util.Range;
 
 import org.joda.time.LocalDate;

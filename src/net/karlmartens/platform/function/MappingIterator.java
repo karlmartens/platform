@@ -1,5 +1,5 @@
 /**
- *   Copyright 2011 Karl Martens
+ *   Copyright 2013 Karl Martens
  *
  *   Licensed under the Apache License, Version 2.0 (the "License");
  *   you may not use this file except in compliance with the License.
@@ -16,34 +16,32 @@
  *   net.karlmartens.platform, is a library of shared basic utility classes
  */
 
-package net.karlmartens.platform.util;
+package net.karlmartens.platform.function;
 
-import java.util.Comparator;
+import java.util.Iterator;
 
-import net.karlmartens.platform.function.Pair;
+/**
+ * @author kmartens
+ *
+ */
+final class MappingIterator<T, S> extends UnmodifiableIterator<S> {
 
-public class PairKeyComparator<K, V> implements Comparator<Pair<K, V>> {
-  
-  private final Comparator<K> _comparator;
-  
-  public PairKeyComparator(Comparator<K> comparator) {
-    _comparator = comparator;
+  private Iterator<? extends T> _it;
+  private Function<T, S> _f;
+
+  public MappingIterator(Iterator<? extends T> it, Function<T, S> f) {
+    _it = it;
+    _f = f;
   }
 
   @Override
-  public int compare(Pair<K, V> o1, Pair<K, V> o2) {
-    if (o1 == o2)
-      return 0;
-    
-    if (o1 == null)
-      return -1;
-    
-    if (o2 == null)
-      return 1;
-    
-    final K k1 = o1.a();
-    final K k2 = o2.a();
-    return _comparator.compare(k1, k2);
+  public boolean hasNext() {
+    return _it.hasNext();
+  }
+
+  @Override
+  public S next() {
+    return _f.apply(_it.next());
   }
 
 }

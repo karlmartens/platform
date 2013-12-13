@@ -25,6 +25,15 @@ public final class NullSafe {
   private NullSafe() {
     // Utility class
   }
+  
+  @SafeVarargs
+  public static <T> T coalesce(T... obs) {
+    for (T ob : obs) {
+      if (ob != null)
+        return ob;
+    }
+    return null;
+  }
 
   public static String toString(Object value) {
     if (value == null)
