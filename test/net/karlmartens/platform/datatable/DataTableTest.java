@@ -40,6 +40,7 @@ import org.junit.Test;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.JsonElement;
 
 public class DataTableTest {
 
@@ -62,7 +63,7 @@ public class DataTableTest {
         "    }", //
         "  ],", //
         "  \"rows\": []", //
-        "}"), createGson().toJson(table.toJson()));
+        "}"), jsonToString(table.toJson()));
   }
 
   @Test
@@ -84,7 +85,7 @@ public class DataTableTest {
         "    }", //
         "  ],", //
         "  \"rows\": []", //
-        "}"), createGson().toJson(table.toJson()));
+        "}"), jsonToString(table.toJson()));
   }
 
   @Test
@@ -132,7 +133,7 @@ public class DataTableTest {
         "    }", //
         "  ],", //
         "  \"rows\": []", //
-        "}"), createGson().toJson(table.toJson()));
+        "}"), jsonToString(table.toJson()));
   }
 
   @Test
@@ -166,7 +167,7 @@ public class DataTableTest {
         "    }", //
         "  ],", //
         "  \"rows\": []", //
-        "}"), createGson().toJson(table.toJson()));
+        "}"), jsonToString(table.toJson()));
   }
 
   @Test
@@ -262,7 +263,7 @@ public class DataTableTest {
         "      ]", //
         "    }", //
         "  ]", //
-        "}"), createGson().toJson(table.toJson()));
+        "}"), jsonToString(table.toJson()));
   }
 
   @Test
@@ -298,7 +299,7 @@ public class DataTableTest {
         "      ]", //
         "    }", //
         "  ]", //
-        "}"), createGson().toJson(table.toJson()));
+        "}"), jsonToString(table.toJson()));
   }
 
   @Test
@@ -346,7 +347,7 @@ public class DataTableTest {
         "      ]", //
         "    }", //
         "  ]", //
-        "}"), createGson().toJson(table.toJson()));
+        "}"), jsonToString(table.toJson()));
   }
 
   @Test
@@ -368,7 +369,7 @@ public class DataTableTest {
         "      \"c\": []", //
         "    }", //
         "  ]", //
-        "}"), createGson().toJson(table.toJson()));
+        "}"), jsonToString(table.toJson()));
   }
 
   @Test
@@ -836,7 +837,7 @@ public class DataTableTest {
         "      ]", //
         "    }", //
         "  ]", //
-        "}"), createGson().toJson(table.toJson()));
+        "}"), jsonToString(table.toJson()));
   }
 
   @Test
@@ -990,7 +991,7 @@ public class DataTableTest {
         "    }", //
         "  ],", //
         "  \"rows\": []", //
-        "}"), createGson().toJson(table.toJson()));
+        "}"), jsonToString(table.toJson()));
   }
 
   @Test
@@ -1017,7 +1018,7 @@ public class DataTableTest {
         "    }", //
         "  ],", //
         "  \"rows\": []", //
-        "}"), createGson().toJson(table.toJson()));
+        "}"), jsonToString(table.toJson()));
   }
 
   @Test
@@ -1047,7 +1048,7 @@ public class DataTableTest {
         "    }", //
         "  ],", //
         "  \"rows\": []", //
-        "}"), createGson().toJson(table.toJson()));
+        "}"), jsonToString(table.toJson()));
   }
 
   @Test
@@ -1085,7 +1086,7 @@ public class DataTableTest {
         "    }", //
         "  ],", //
         "  \"rows\": []", //
-        "}"), createGson().toJson(table.toJson()));
+        "}"), jsonToString(table.toJson()));
   }
 
   @Test
@@ -1104,7 +1105,7 @@ public class DataTableTest {
         "      \"c\": []", //
         "    }", //
         "  ]", //
-        "}"), createGson().toJson(table.toJson()));
+        "}"), jsonToString(table.toJson()));
   }
 
   @Test
@@ -1141,7 +1142,7 @@ public class DataTableTest {
         "      ]", //
         "    }", //
         "  ]", //
-        "}"), createGson().toJson(table.toJson()));
+        "}"), jsonToString(table.toJson()));
   }
 
   @Test
@@ -1178,7 +1179,7 @@ public class DataTableTest {
         "      ]", //
         "    }", //
         "  ]", //
-        "}"), createGson().toJson(table.toJson()));
+        "}"), jsonToString(table.toJson()));
   }
 
   @Test
@@ -1217,7 +1218,7 @@ public class DataTableTest {
         "      ]", //
         "    }", //
         "  ]", //
-        "}"), createGson().toJson(table.toJson()));
+        "}"), jsonToString(table.toJson()));
   }
 
   @Test
@@ -1264,7 +1265,7 @@ public class DataTableTest {
         "      ]", //
         "    }", //
         "  ]", //
-        "}"), createGson().toJson(table.toJson()));
+        "}"), jsonToString(table.toJson()));
   }
 
   @Test
@@ -1311,7 +1312,11 @@ public class DataTableTest {
         "      ]", //
         "    }", //
         "  ]", //
-        "}"), createGson().toJson(table.toJson()));
+        "}"), jsonToString(table.toJson()));
+  }
+
+  private String jsonToString(JsonElement element) {
+    return createGson().toJson(element) + "\n";
   }
 
   private Gson createGson() {
