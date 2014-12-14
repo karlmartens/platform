@@ -18,6 +18,7 @@
 
 package net.karlmartens.platform.util;
 
+import java.lang.reflect.Array;
 import java.util.Comparator;
 import java.util.Locale;
 
@@ -39,8 +40,30 @@ public final class NullSafe {
   public static String toString(Object value) {
     if (value == null)
       return null;
-
+    
+    if (value.getClass().isArray())
+      return arrayToString(value);
+    
     return value.toString();
+  }
+
+  private static String arrayToString(Object value) {
+    if (value == null)
+      return null;
+    
+    StringBuilder builder = new StringBuilder();
+    builder.append("[");
+    for (int i=0; i<Array.getLength(value); i++) {
+      if (i>0) {
+        builder.append(", ");
+      }
+      
+      Object o = Array.get(value, i);
+      builder.append(toString(o));
+    }
+    builder.append("]");
+    
+    return builder.toString();
   }
 
   public static String formatString(Locale locale, String format, Object value) {

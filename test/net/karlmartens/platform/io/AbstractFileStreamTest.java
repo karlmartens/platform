@@ -1,5 +1,24 @@
+/**
+ *   Copyright 2014 Karl Martens
+ *
+ *   Licensed under the Apache License, Version 2.0 (the "License");
+ *   you may not use this file except in compliance with the License.
+ *   You may obtain a copy of the License at
+ *
+ *       http://www.apache.org/licenses/LICENSE-2.0
+ *       
+ *   Unless required by applicable law or agreed to in writing, software
+ *   distributed under the License is distributed on an "AS IS" BASIS,
+ *   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *   See the License for the specific language governing permissions and
+ *   limitations under the License.
+ *
+ *   net.karlmartens.platform, is a library of shared basic utility classes
+ */
+
 package net.karlmartens.platform.io;
 
+import java.lang.reflect.Array;
 import java.nio.ByteBuffer;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
@@ -13,6 +32,10 @@ import net.karlmartens.platform.util.NullSafe;
 
 import org.junit.Rule;
 
+/**
+ * @author kmartens
+ *
+ */
 public abstract class AbstractFileStreamTest {
 
   @Rule
@@ -78,7 +101,7 @@ public abstract class AbstractFileStreamTest {
     while (it.hasNext()) {
       Record r = it.next();
       expectedSummary.actual(
-          "%1$4s %2$5s %3$4s %4$5s %5$10s %6$19s %7$10s %8$14s %9$9s %10$s",
+          "%1$4s %2$5s %3$4s %4$5s %5$10s %6$19s %7$10s %8$14s %9$9s %10$10s %11$10s",
           r.b == null ? null : r.b & 0xff, //
           NullSafe.toString(r.bool), //
           NullSafe.toString(r.c), //
@@ -88,7 +111,8 @@ public abstract class AbstractFileStreamTest {
           NullSafe.formatString(Locale.US, "%1$.6f", r.f), //
           NullSafe.formatString(Locale.US, "%1$.8f", r.d), //
           NullSafe.toString(r.month), //
-          NullSafe.toString(r.str)//
+          NullSafe.toString(r.str), //
+          NullSafe.toString(r.strArr) //
           );
     }
   }
@@ -195,13 +219,19 @@ public abstract class AbstractFileStreamTest {
       putString(StandardCharsets.UTF_8, (String)o);
     } else if (type.isEnum()) {
       file.putInt(((Enum<?>)o).ordinal());
+    } else if (type.isArray()) { 
+      int length = Array.getLength(o);
+      file.putInt(length);
+      for (int i = 0; i<length; i++) {
+        putObject(Array.get(o, i));
+      }
     } else {
       throw new IllegalStateException();
     }
   }
 
   protected final void putRecord(Record r) {
-    Object[] objs = { r.b, r.bool, r.c, r.s, r.i, r.l, r.f, r.d, r.str, r.month };
+    Object[] objs = { r.b, r.bool, r.c, r.s, r.i, r.l, r.f, r.d, r.str, r.month, r.strArr };
     byte[] nulls = new byte[((int) Math.ceil(objs.length / 8.0))];
     for (int i = 0; i < objs.length; i++) {
       if (objs[i] == null) {
