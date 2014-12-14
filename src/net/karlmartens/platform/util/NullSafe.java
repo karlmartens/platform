@@ -19,6 +19,7 @@
 package net.karlmartens.platform.util;
 
 import java.util.Comparator;
+import java.util.Locale;
 
 public final class NullSafe {
 
@@ -40,6 +41,13 @@ public final class NullSafe {
       return null;
 
     return value.toString();
+  }
+
+  public static String formatString(Locale locale, String format, Object value) {
+    if (value == null)
+      return null;
+
+    return String.format(locale, format, value);
   }
 
   public static boolean equals(Object o1, Object o2) {
