@@ -18,7 +18,7 @@
 
 package net.karlmartens.platform.io;
 
-import net.karlmartens.platform.io.FileStream.ReadBuffer;
+import net.karlmartens.platform.io.FileInputStream.ReadBuffer;
 
 /**
  * @author kmartens

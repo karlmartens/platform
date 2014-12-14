@@ -20,7 +20,7 @@ package net.karlmartens.platform.io;
 
 import java.time.Month;
 
-import net.karlmartens.platform.io.FileStream.ReadBuffer;
+import net.karlmartens.platform.io.FileInputStream.ReadBuffer;
 
 /**
  * @author kmartens

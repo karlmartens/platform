@@ -42,8 +42,8 @@ public final class FileStreamFactory {
         return this;
     }
 
-    public <T> FileStream<T> stream(Path path, Class<T> type) {
-        return FileStream.create(path, getDeserializer(type));
+    public <T> FileInputStream<T> stream(Path path, Class<T> type) {
+        return FileInputStream.create(path, getDeserializer(type));
     }
 
     private <T> Deserializer<T> getDeserializer(Class<T> type) {

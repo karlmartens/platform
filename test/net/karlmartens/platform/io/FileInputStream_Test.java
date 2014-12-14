@@ -28,14 +28,14 @@ import org.junit.Test;
  * @author kmartens
  *
  */
-public class FileStream_Test extends AbstractFileStreamTest {
+public class FileInputStream_Test extends AbstractFileStreamTest {
 
   @Test
   public void testByteFileStream() throws Exception {
     file.putBytes((byte) 0, (byte) 32, (byte) 255);
     file.close();
 
-    Iterator<Byte> it = FileStream.create(file.path(),
+    Iterator<Byte> it = FileInputStream.create(file.path(),
         ByteDeserializer.instance());
     summarizeBytes(it);
 
@@ -47,7 +47,7 @@ public class FileStream_Test extends AbstractFileStreamTest {
     file.putBytes((byte) 0, (byte) 1, (byte) 2, (byte) 255);
     file.close();
 
-    Iterator<Boolean> it = FileStream.create(file.path(),
+    Iterator<Boolean> it = FileInputStream.create(file.path(),
         BooleanDeserializer.instance());
     summarize(it);
 
@@ -59,7 +59,7 @@ public class FileStream_Test extends AbstractFileStreamTest {
     file.putChars('H', 'o', 'お');
     file.close();
 
-    Iterator<Character> it = FileStream.create(file.path(),
+    Iterator<Character> it = FileInputStream.create(file.path(),
         CharDeserializer.instance());
     summarize(it);
 
@@ -71,7 +71,7 @@ public class FileStream_Test extends AbstractFileStreamTest {
     putStrings(StandardCharsets.UTF_8, "Hello", "World", "お元気ですか？");
     file.close();
 
-    Iterator<String> it = FileStream.create(file.path(),
+    Iterator<String> it = FileInputStream.create(file.path(),
         StringDeserializer.instance());
     summarize(it);
 
@@ -83,7 +83,7 @@ public class FileStream_Test extends AbstractFileStreamTest {
     file.putShorts((short) 0, (short) 12, (short) 20456);
     file.close();
 
-    Iterator<Short> it = FileStream.create(file.path(),
+    Iterator<Short> it = FileInputStream.create(file.path(),
         ShortDeserializer.instance());
     summarize(it);
 
@@ -95,7 +95,7 @@ public class FileStream_Test extends AbstractFileStreamTest {
     file.putInts(0, 12, 20456);
     file.close();
 
-    Iterator<Integer> it = FileStream.create(file.path(),
+    Iterator<Integer> it = FileInputStream.create(file.path(),
         IntDeserializer.instance());
     summarize(it);
 
@@ -107,7 +107,7 @@ public class FileStream_Test extends AbstractFileStreamTest {
     file.putLongs(-100000L, 9020456432459916251L, 1234567L);
     file.close();
 
-    Iterator<Long> it = FileStream.create(file.path(),
+    Iterator<Long> it = FileInputStream.create(file.path(),
         LongDeserializer.instance());
     summarize(it);
 
@@ -119,7 +119,7 @@ public class FileStream_Test extends AbstractFileStreamTest {
     file.putFloats(0.12f, 0.45f, 23.456745f);
     file.close();
 
-    Iterator<Float> it = FileStream.create(file.path(),
+    Iterator<Float> it = FileInputStream.create(file.path(),
         FloatDeserializer.instance());
     summarize(it);
 
@@ -131,7 +131,7 @@ public class FileStream_Test extends AbstractFileStreamTest {
     file.putDoubles(0.12d, 0.45d, 23.4567455d);
     file.close();
 
-    Iterator<Double> it = FileStream.create(file.path(),
+    Iterator<Double> it = FileInputStream.create(file.path(),
         DoubleDeserializer.instance());
     summarize(it);
 
@@ -143,7 +143,7 @@ public class FileStream_Test extends AbstractFileStreamTest {
     putEnums(Month.values());
     file.close();
 
-    Iterator<Month> it = FileStream.create(file.path(),
+    Iterator<Month> it = FileInputStream.create(file.path(),
         EnumDeserializer.create(Month.class));
     summarize(it);
 
@@ -193,7 +193,7 @@ public class FileStream_Test extends AbstractFileStreamTest {
     putRecords(r1, r2, r3);
     file.close();
 
-    Iterator<Record> it = FileStream.create(file.path(),
+    Iterator<Record> it = FileInputStream.create(file.path(),
         new RecordDeserializer());
     summarizeRecords(it);
 

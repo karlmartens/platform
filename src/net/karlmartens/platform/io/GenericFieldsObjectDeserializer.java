@@ -23,7 +23,7 @@ import java.util.ArrayList;
 import java.util.BitSet;
 import java.util.List;
 
-import net.karlmartens.platform.io.FileStream.ReadBuffer;
+import net.karlmartens.platform.io.FileInputStream.ReadBuffer;
 
 /**
  * @author kmartens

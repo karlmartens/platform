@@ -32,7 +32,7 @@ import java.util.NoSuchElementException;
  * @author kmartens
  *
  */
-public class FileStream<T> implements Iterator<T> {
+public class FileInputStream<T> implements Iterator<T> {
 
 	private final ReadBuffer _buffer;
 	private final Deserializer<T> _deserializer;
@@ -40,7 +40,7 @@ public class FileStream<T> implements Iterator<T> {
 	private boolean _hasNext = true;
 	private T _next;
 
-	private FileStream(ReadBuffer buffer, Deserializer<T> deserializer) {
+	private FileInputStream(ReadBuffer buffer, Deserializer<T> deserializer) {
 		_buffer = buffer;
 		_deserializer = deserializer;
 		advance();
@@ -71,10 +71,10 @@ public class FileStream<T> implements Iterator<T> {
 		_next = _deserializer.read(_buffer);
 	}
 
-	public static <T> FileStream<T> create(Path path, Deserializer<T> deserializer) {
+	public static <T> FileInputStream<T> create(Path path, Deserializer<T> deserializer) {
 		try {
 			FileChannel channel = FileChannel.open(path, READ);
-			return new FileStream<>(new ReadBuffer(channel), deserializer);
+			return new FileInputStream<>(new ReadBuffer(channel), deserializer);
 		} catch (IOException ex) {
 			throw new RuntimeException(ex);
 		}

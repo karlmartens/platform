@@ -21,7 +21,7 @@ package net.karlmartens.platform.io;
 import java.nio.ByteBuffer;
 import java.nio.charset.StandardCharsets;
 
-import net.karlmartens.platform.io.FileStream.ReadBuffer;
+import net.karlmartens.platform.io.FileInputStream.ReadBuffer;
 
 /**
  * @author kmartens
