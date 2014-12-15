@@ -18,28 +18,34 @@
 
 package net.karlmartens.platform.io;
 
-import net.karlmartens.platform.io.FileInputStream.ReadBuffer;
+import java.lang.reflect.Array;
+
+import net.karlmartens.platform.io.FileOutputStream.WriteBuffer;
 
 /**
  * @author kmartens
  *
  */
-public class EnumDeserializer<T> implements Deserializer<T> {
-    
-    private final Class<T> _type;
+public class ArraySerializer implements Serializer<Object> {
 
-    EnumDeserializer(Class<T> type) {
-        _type = type;        
-    }
+  private final Serializer<Object> _componentSerializer;
 
-    @Override
-    public T read(ReadBuffer buffer) {
-        int ordinal = buffer.getInt();
-        return _type.getEnumConstants()[ordinal];
+  private ArraySerializer(Serializer<Object> componentSerializer) {
+    _componentSerializer = componentSerializer;
+  }
+  
+  @Override
+  public void write(WriteBuffer buffer, Object value) {
+    int length = Array.getLength(value);
+    buffer.putInt(length);
+    for (int i=0; i<length; i++) {
+      _componentSerializer.write(buffer, Array.get(value, i));
     }
-    
-    public static <T extends Enum<T>> EnumDeserializer<T> create(Class<T> type) {
-        return new EnumDeserializer<>(type);
-    }
+  }
 
+  @SuppressWarnings("unchecked")
+  public static ArraySerializer create(Serializer<?> componentSerializer) {
+    return new ArraySerializer((Serializer<Object>) componentSerializer);
+  }
+  
 }

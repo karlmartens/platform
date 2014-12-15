@@ -18,7 +18,6 @@
 
 package net.karlmartens.platform.io;
 
-import java.nio.charset.StandardCharsets;
 import java.time.Month;
 import java.util.Iterator;
 
@@ -32,8 +31,8 @@ public class FileInputStream_Test extends AbstractFileStreamTest {
 
   @Test
   public void testByteFileStream() throws Exception {
-    file.putBytes((byte) 0, (byte) 32, (byte) 255);
-    file.close();
+    FileOutputStream.create(file.path(), ByteSerializer.instance()).write(
+        byteIter((byte) 0, (byte) 32, (byte) 255));
 
     Iterator<Byte> it = FileInputStream.create(file.path(),
         ByteDeserializer.instance());
@@ -44,8 +43,8 @@ public class FileInputStream_Test extends AbstractFileStreamTest {
 
   @Test
   public void testBooleanFileStream() throws Exception {
-    file.putBytes((byte) 0, (byte) 1, (byte) 2, (byte) 255);
-    file.close();
+    FileOutputStream.create(file.path(), ByteSerializer.instance()).write(
+        byteIter((byte) 0, (byte) 1, (byte) 2, (byte) 255));
 
     Iterator<Boolean> it = FileInputStream.create(file.path(),
         BooleanDeserializer.instance());
@@ -56,8 +55,8 @@ public class FileInputStream_Test extends AbstractFileStreamTest {
 
   @Test
   public void testCharFileStream() throws Exception {
-    file.putChars('H', 'o', 'お');
-    file.close();
+    FileOutputStream.create(file.path(), CharSerializer.instance()).write(
+        charIter('H', 'o', 'お'));
 
     Iterator<Character> it = FileInputStream.create(file.path(),
         CharDeserializer.instance());
@@ -68,8 +67,8 @@ public class FileInputStream_Test extends AbstractFileStreamTest {
 
   @Test
   public void testStringFileStream() throws Exception {
-    putStrings(StandardCharsets.UTF_8, "Hello", "World", "お元気ですか？");
-    file.close();
+    FileOutputStream.create(file.path(), StringSerializer.instance()).write(
+        objectIter("Hello", "World", "お元気ですか？"));
 
     Iterator<String> it = FileInputStream.create(file.path(),
         StringDeserializer.instance());
@@ -80,8 +79,8 @@ public class FileInputStream_Test extends AbstractFileStreamTest {
 
   @Test
   public void testShortFileStream() throws Exception {
-    file.putShorts((short) 0, (short) 12, (short) 20456);
-    file.close();
+    FileOutputStream.create(file.path(), ShortSerializer.instance()).write(
+        shortIter((short) 0, (short) 12, (short) 20456));
 
     Iterator<Short> it = FileInputStream.create(file.path(),
         ShortDeserializer.instance());
@@ -92,8 +91,8 @@ public class FileInputStream_Test extends AbstractFileStreamTest {
 
   @Test
   public void testIntFileStream() throws Exception {
-    file.putInts(0, 12, 20456);
-    file.close();
+    FileOutputStream.create(file.path(), IntSerializer.instance()).write(
+        intIter(0, 12, 20456));
 
     Iterator<Integer> it = FileInputStream.create(file.path(),
         IntDeserializer.instance());
@@ -104,8 +103,8 @@ public class FileInputStream_Test extends AbstractFileStreamTest {
 
   @Test
   public void testLongFileStream() throws Exception {
-    file.putLongs(-100000L, 9020456432459916251L, 1234567L);
-    file.close();
+    FileOutputStream.create(file.path(), LongSerializer.instance()).write(
+        longIter(-100000L, 9020456432459916251L, 1234567L));
 
     Iterator<Long> it = FileInputStream.create(file.path(),
         LongDeserializer.instance());
@@ -116,8 +115,8 @@ public class FileInputStream_Test extends AbstractFileStreamTest {
 
   @Test
   public void testFloatFileStream() throws Exception {
-    file.putFloats(0.12f, 0.45f, 23.456745f);
-    file.close();
+    FileOutputStream.create(file.path(), FloatSerializer.instance()).write(
+        floatIter(0.12f, 0.45f, 23.456745f));
 
     Iterator<Float> it = FileInputStream.create(file.path(),
         FloatDeserializer.instance());
@@ -128,8 +127,8 @@ public class FileInputStream_Test extends AbstractFileStreamTest {
 
   @Test
   public void testDoubleFileStream() throws Exception {
-    file.putDoubles(0.12d, 0.45d, 23.4567455d);
-    file.close();
+    FileOutputStream.create(file.path(), DoubleSerializer.instance()).write(
+        doubleIter(0.12d, 0.45d, 23.4567455d));
 
     Iterator<Double> it = FileInputStream.create(file.path(),
         DoubleDeserializer.instance());
@@ -140,8 +139,8 @@ public class FileInputStream_Test extends AbstractFileStreamTest {
 
   @Test
   public void testEnumFileStream() throws Exception {
-    putEnums(Month.values());
-    file.close();
+    FileOutputStream.create(file.path(), EnumSerializer.instance()).write(
+        objectIter(Month.values()));
 
     Iterator<Month> it = FileInputStream.create(file.path(),
         EnumDeserializer.create(Month.class));
@@ -190,8 +189,8 @@ public class FileInputStream_Test extends AbstractFileStreamTest {
     r3.str = null;
     r3.month = Month.FEBRUARY;
 
-    putRecords(r1, r2, r3);
-    file.close();
+    FileOutputStream.create(file.path(), new RecordSerializer()).write(
+        objectIter(r1, r2, r3));
 
     Iterator<Record> it = FileInputStream.create(file.path(),
         new RecordDeserializer());
@@ -200,9 +199,9 @@ public class FileInputStream_Test extends AbstractFileStreamTest {
     expectedSummary
         .expect(
             //
-           "  23  true    d 32000     321000          4000000000  12.230000    12.34567000    AUGUST      Hello,       null", //
-           " 255 false    r 15000     150000          8000000000  24.459999    24.69134000  FEBRUARY      World,       null", //
-           "null false    r 15000     150000          8000000000  24.459999           null  FEBRUARY       null,       null" //
+            "  23  true    d 32000     321000          4000000000  12.230000    12.34567000    AUGUST      Hello       null", //
+            " 255 false    r 15000     150000          8000000000  24.459999    24.69134000  FEBRUARY      World       null", //
+            "null false    r 15000     150000          8000000000  24.459999           null  FEBRUARY       null       null" //
         );
   }
 

@@ -18,28 +18,26 @@
 
 package net.karlmartens.platform.io;
 
-import net.karlmartens.platform.io.FileInputStream.ReadBuffer;
+import net.karlmartens.platform.io.FileOutputStream.WriteBuffer;
 
 /**
  * @author kmartens
  *
  */
-public class EnumDeserializer<T> implements Deserializer<T> {
-    
-    private final Class<T> _type;
+public class IntSerializer implements Serializer<Integer> {
 
-    EnumDeserializer(Class<T> type) {
-        _type = type;        
-    }
+  private static final IntSerializer _INSTANCE = new IntSerializer();
 
-    @Override
-    public T read(ReadBuffer buffer) {
-        int ordinal = buffer.getInt();
-        return _type.getEnumConstants()[ordinal];
-    }
-    
-    public static <T extends Enum<T>> EnumDeserializer<T> create(Class<T> type) {
-        return new EnumDeserializer<>(type);
-    }
+  private IntSerializer() {
+    // Reduced visibility
+  }
+  
+  @Override
+  public void write(WriteBuffer buffer, Integer value) {
+    buffer.putInt(value);
+  }
 
+  public static IntSerializer instance() {
+    return _INSTANCE;
+  }
 }

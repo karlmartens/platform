@@ -35,17 +35,10 @@ final class Deserializers {
         _useGenericObjectDeserializer = true;
     }
 
-    <T> Deserializers addDeserializer(Class<T> type,
+  <T> Deserializers addDeserializer(Class<T> type,
             Deserializer<T> deserializer) {
         _map.put(type, deserializer);
         return this;
-    }
-
-    boolean isSupported(Class<?> type) {
-        return _useGenericObjectDeserializer
-                || type.isEnum()
-                || (type.isArray() && _map.containsKey(type.getComponentType()))
-                || _map.containsKey(type);
     }
 
     @SuppressWarnings("unchecked")
@@ -60,12 +53,12 @@ final class Deserializers {
         if (type.isArray()) {
             Class<?> componentType = type.getComponentType();
             Deserializer<?> deserializer = getDeserializer(componentType);
-            return (Deserializer<T>) new ArrayDeserializer(componentType,
+            return (Deserializer<T>) ArrayDeserializer.create(componentType,
                     deserializer);
         }
         
         if (_useGenericObjectDeserializer) {
-            return GenericObjectDeserializer.create(this, type);
+            return GenericFieldsObjectDeserializer.create(this, type);
         }
 
         throw new IllegalStateException(String.format(Locale.US,

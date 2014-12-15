@@ -31,15 +31,13 @@ public class StringDeserializer implements Deserializer<String> {
 
     private static final StringDeserializer _INSTANCE = new StringDeserializer();
 
-    private final IntDeserializer _intDeserializer;
-    
     private StringDeserializer() {
-        _intDeserializer = IntDeserializer.instance();
+      // Reduced visibility
     }
 
     @Override
     public String read(ReadBuffer buffer) {
-        int size = _intDeserializer.read(buffer);
+        int size = buffer.getInt();
         ByteBuffer bb = ByteBuffer.wrap(buffer.getBytes(new byte[size]));
         return StandardCharsets.UTF_8.decode(bb).toString();
     }

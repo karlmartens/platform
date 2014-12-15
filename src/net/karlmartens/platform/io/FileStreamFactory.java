@@ -26,50 +26,87 @@ import java.nio.file.Path;
  */
 public final class FileStreamFactory {
 
-    private final Deserializers _deserializers;
-    
-    private FileStreamFactory(Deserializers deserializers) {
-        _deserializers = deserializers;
-    }
+  private final Serializers _serializers;
+  private final Deserializers _deserializers;
 
-    public FileStreamFactory useGenericObjectDeserializer() {
-        _deserializers.useGenericObjectDeserializer();
-        return this;
-    }
+  private FileStreamFactory(Serializers serializers, Deserializers deserializers) {
+    _serializers = serializers;
+    _deserializers = deserializers;
+  }
 
-    public <T> FileStreamFactory addDeserializer(Class<T> type, Deserializer<T> deserializer) {
-        _deserializers.addDeserializer(type, deserializer);
-        return this;
-    }
+  public FileStreamFactory useGenericObjectSerialization() {
+    _serializers.useGenericObjectSerializer();
+    _deserializers.useGenericObjectDeserializer();
+    return this;
+  }
 
-    public <T> FileInputStream<T> stream(Path path, Class<T> type) {
-        return FileInputStream.create(path, getDeserializer(type));
-    }
+  public <T> FileStreamFactory addSerializer(Class<T> type,
+      Serializer<T> serializer) {
+    _serializers.addSerializer(type, serializer);
+    return this;
+  }
 
-    private <T> Deserializer<T> getDeserializer(Class<T> type) {
-        return _deserializers.getDeserializer(type);
-    }
+  public <T> FileStreamFactory addDeserializer(Class<T> type,
+      Deserializer<T> deserializer) {
+    _deserializers.addDeserializer(type, deserializer);
+    return this;
+  }
 
-    public static FileStreamFactory create() {
-        return new FileStreamFactory(new Deserializers()//
-                .addDeserializer(byte.class, ByteDeserializer.instance()) //
-                .addDeserializer(Byte.class, ByteDeserializer.instance()) //
-                .addDeserializer(boolean.class, BooleanDeserializer.instance()) //
-                .addDeserializer(Boolean.class, BooleanDeserializer.instance()) //
-                .addDeserializer(char.class, CharDeserializer.instance()) //
-                .addDeserializer(Character.class, CharDeserializer.instance()) //
-                .addDeserializer(short.class, ShortDeserializer.instance()) //
-                .addDeserializer(Short.class, ShortDeserializer.instance()) //
-                .addDeserializer(int.class, IntDeserializer.instance()) //
-                .addDeserializer(Integer.class, IntDeserializer.instance()) //
-                .addDeserializer(long.class, LongDeserializer.instance()) //
-                .addDeserializer(Long.class, LongDeserializer.instance()) //
-                .addDeserializer(float.class, FloatDeserializer.instance()) //
-                .addDeserializer(Float.class, FloatDeserializer.instance()) //
-                .addDeserializer(double.class, DoubleDeserializer.instance()) //
-                .addDeserializer(Double.class, DoubleDeserializer.instance()) //
-                .addDeserializer(String.class, StringDeserializer.instance()) //
-        );
-    }
+  public <T> FileInputStream<T> inputStream(Path path, Class<T> type) {
+    return FileInputStream.create(path, getDeserializer(type));
+  }
+
+  private <T> Deserializer<T> getDeserializer(Class<T> type) {
+    return _deserializers.getDeserializer(type);
+  }
+
+  public <T> FileOutputStream<T> outputStream(Path path, Class<T> type) {
+    return FileOutputStream.create(path, getSerializer(type));
+  }
+
+  private <T> Serializer<T> getSerializer(Class<T> type) {
+    return _serializers.getSerializer(type);
+  }
+
+  public static FileStreamFactory create() {
+    return new FileStreamFactory(//
+        new Serializers()//
+            .addSerializer(byte.class, ByteSerializer.instance()) //
+            .addSerializer(Byte.class, ByteSerializer.instance()) //
+            .addSerializer(boolean.class, BooleanSerializer.instance()) //
+            .addSerializer(Boolean.class, BooleanSerializer.instance()) //
+            .addSerializer(char.class, CharSerializer.instance()) //
+            .addSerializer(Character.class, CharSerializer.instance()) //
+            .addSerializer(short.class, ShortSerializer.instance()) //
+            .addSerializer(Short.class, ShortSerializer.instance()) //
+            .addSerializer(int.class, IntSerializer.instance()) //
+            .addSerializer(Integer.class, IntSerializer.instance()) //
+            .addSerializer(long.class, LongSerializer.instance()) //
+            .addSerializer(Long.class, LongSerializer.instance()) //
+            .addSerializer(float.class, FloatSerializer.instance()) //
+            .addSerializer(Float.class, FloatSerializer.instance()) //
+            .addSerializer(double.class, DoubleSerializer.instance()) //
+            .addSerializer(Double.class, DoubleSerializer.instance()) //
+            .addSerializer(String.class, StringSerializer.instance()), //
+        new Deserializers()//
+            .addDeserializer(byte.class, ByteDeserializer.instance()) //
+            .addDeserializer(Byte.class, ByteDeserializer.instance()) //
+            .addDeserializer(boolean.class, BooleanDeserializer.instance()) //
+            .addDeserializer(Boolean.class, BooleanDeserializer.instance()) //
+            .addDeserializer(char.class, CharDeserializer.instance()) //
+            .addDeserializer(Character.class, CharDeserializer.instance()) //
+            .addDeserializer(short.class, ShortDeserializer.instance()) //
+            .addDeserializer(Short.class, ShortDeserializer.instance()) //
+            .addDeserializer(int.class, IntDeserializer.instance()) //
+            .addDeserializer(Integer.class, IntDeserializer.instance()) //
+            .addDeserializer(long.class, LongDeserializer.instance()) //
+            .addDeserializer(Long.class, LongDeserializer.instance()) //
+            .addDeserializer(float.class, FloatDeserializer.instance()) //
+            .addDeserializer(Float.class, FloatDeserializer.instance()) //
+            .addDeserializer(double.class, DoubleDeserializer.instance()) //
+            .addDeserializer(Double.class, DoubleDeserializer.instance()) //
+            .addDeserializer(String.class, StringDeserializer.instance()) //
+    );
+  }
 
 }

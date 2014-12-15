@@ -18,7 +18,6 @@
 
 package net.karlmartens.platform.io;
 
-import java.nio.charset.StandardCharsets;
 import java.time.Month;
 import java.util.Iterator;
 
@@ -34,10 +33,10 @@ public class FileStreamFactory_Test extends AbstractFileStreamTest {
 
   @Test
   public void testByteFileStream() throws Exception {
-    file.putBytes((byte) 0, (byte) 32, (byte) 255);
-    file.close();
+    _factory.outputStream(file.path(), Byte.class).write(
+        byteIter((byte) 0, (byte) 32, (byte) 255));
 
-    Iterator<Byte> it = _factory.stream(file.path(), Byte.class);
+    Iterator<Byte> it = _factory.inputStream(file.path(), Byte.class);
     summarizeBytes(it);
 
     expectedSummary.expect("0", "32", "255");
@@ -45,10 +44,10 @@ public class FileStreamFactory_Test extends AbstractFileStreamTest {
 
   @Test
   public void testBooleanFileStream() throws Exception {
-    file.putBytes((byte) 0, (byte) 1, (byte) 2, (byte) 255);
-    file.close();
+    _factory.outputStream(file.path(), Byte.class).write(
+        byteIter((byte) 0, (byte) 1, (byte) 2, (byte) 255));
 
-    Iterator<Boolean> it = _factory.stream(file.path(), Boolean.class);
+    Iterator<Boolean> it = _factory.inputStream(file.path(), Boolean.class);
     summarize(it);
 
     expectedSummary.expect("false", "true", "false", "false");
@@ -56,10 +55,10 @@ public class FileStreamFactory_Test extends AbstractFileStreamTest {
 
   @Test
   public void testCharFileStream() throws Exception {
-    file.putChars('H', 'o', 'お');
-    file.close();
+    _factory.outputStream(file.path(), Character.class).write(
+        charIter('H', 'o', 'お'));
 
-    Iterator<Character> it = _factory.stream(file.path(), Character.class);
+    Iterator<Character> it = _factory.inputStream(file.path(), Character.class);
     summarize(it);
 
     expectedSummary.expect("H", "o", "お");
@@ -67,10 +66,10 @@ public class FileStreamFactory_Test extends AbstractFileStreamTest {
 
   @Test
   public void testStringFileStream() throws Exception {
-    putStrings(StandardCharsets.UTF_8, "Hello", "World", "お元気ですか？");
-    file.close();
+    _factory.outputStream(file.path(), String.class).write(
+        objectIter("Hello", "World", "お元気ですか？"));
 
-    Iterator<String> it = _factory.stream(file.path(), String.class);
+    Iterator<String> it = _factory.inputStream(file.path(), String.class);
     summarize(it);
 
     expectedSummary.expect("Hello", "World", "お元気ですか？");
@@ -78,10 +77,10 @@ public class FileStreamFactory_Test extends AbstractFileStreamTest {
 
   @Test
   public void testShortFileStream() throws Exception {
-    file.putShorts((short) 0, (short) 12, (short) 20456);
-    file.close();
+    _factory.outputStream(file.path(), Short.class).write(
+        shortIter((short) 0, (short) 12, (short) 20456));
 
-    Iterator<Short> it = _factory.stream(file.path(), Short.class);
+    Iterator<Short> it = _factory.inputStream(file.path(), Short.class);
     summarize(it);
 
     expectedSummary.expect("0", "12", "20456");
@@ -89,10 +88,10 @@ public class FileStreamFactory_Test extends AbstractFileStreamTest {
 
   @Test
   public void testIntFileStream() throws Exception {
-    file.putInts(0, 12, 20456);
-    file.close();
+    _factory.outputStream(file.path(), Integer.class).write(
+        intIter(0, 12, 20456));
 
-    Iterator<Integer> it = _factory.stream(file.path(), Integer.class);
+    Iterator<Integer> it = _factory.inputStream(file.path(), Integer.class);
     summarize(it);
 
     expectedSummary.expect("0", "12", "20456");
@@ -100,10 +99,10 @@ public class FileStreamFactory_Test extends AbstractFileStreamTest {
 
   @Test
   public void testLongFileStream() throws Exception {
-    file.putLongs(-100000L, 9020456432459916251L, 1234567L);
-    file.close();
+    _factory.outputStream(file.path(), Long.class).write(
+        longIter(-100000L, 9020456432459916251L, 1234567L));
 
-    Iterator<Long> it = _factory.stream(file.path(), Long.class);
+    Iterator<Long> it = _factory.inputStream(file.path(), Long.class);
     summarize(it);
 
     expectedSummary.expect("-100000", "9020456432459916251", "1234567");
@@ -111,10 +110,10 @@ public class FileStreamFactory_Test extends AbstractFileStreamTest {
 
   @Test
   public void testFloatFileStream() throws Exception {
-    file.putFloats(0.12f, 0.45f, 23.456745f);
-    file.close();
+    _factory.outputStream(file.path(), Float.class).write(
+        floatIter(0.12f, 0.45f, 23.456745f));
 
-    Iterator<Float> it = _factory.stream(file.path(), Float.class);
+    Iterator<Float> it = _factory.inputStream(file.path(), Float.class);
     summarize(it);
 
     expectedSummary.expect("0.12", "0.45", "23.456745");
@@ -122,10 +121,10 @@ public class FileStreamFactory_Test extends AbstractFileStreamTest {
 
   @Test
   public void testDoubleFileStream() throws Exception {
-    file.putDoubles(0.12d, 0.45d, 23.4567455d);
-    file.close();
+    _factory.outputStream(file.path(), Double.class).write(
+        doubleIter(0.12d, 0.45d, 23.4567455d));
 
-    Iterator<Double> it = _factory.stream(file.path(), Double.class);
+    Iterator<Double> it = _factory.inputStream(file.path(), Double.class);
     summarize(it);
 
     expectedSummary.expect("0.12", "0.45", "23.4567455");
@@ -133,12 +132,12 @@ public class FileStreamFactory_Test extends AbstractFileStreamTest {
 
   @Test
   public void testEnumFileStream() throws Exception {
-    putEnums(Month.values());
-    file.close();
+    _factory.outputStream(file.path(), Month.class).write(
+        objectIter(Month.values()));
 
     Iterator<Month> it = _factory//
-        .useGenericObjectDeserializer()//
-        .stream(file.path(), Month.class);
+        .useGenericObjectSerialization()//
+        .inputStream(file.path(), Month.class);
     summarize(it);
 
     expectedSummary.expect("JANUARY", "FEBRUARY", "MARCH", "APRIL", "MAY",
@@ -148,10 +147,10 @@ public class FileStreamFactory_Test extends AbstractFileStreamTest {
 
   @Test
   public void testBoolArrayFileStream() throws Exception {
-    putBoolArrays(boolArray(true, false), boolArray(false, true));
-    file.close();
+    _factory.outputStream(file.path(), boolean[].class).write(
+        objectIter(boolArray(true, false), boolArray(false, true)));
 
-    Iterator<boolean[]> it = _factory.stream(file.path(), boolean[].class);
+    Iterator<boolean[]> it = _factory.inputStream(file.path(), boolean[].class);
     summarizeBoolArrays(it);
 
     expectedSummary.expect("[true, false]", "[false, true]");
@@ -159,11 +158,11 @@ public class FileStreamFactory_Test extends AbstractFileStreamTest {
 
   @Test
   public void testShortArrayFileStream() throws Exception {
-    putShortArrays(shortArray((short) 3, (short) 6, (short) 4),
-        shortArray((short) 1, (short) 2, (short) 3));
-    file.close();
+    _factory.outputStream(file.path(), short[].class).write(
+        objectIter(shortArray((short) 3, (short) 6, (short) 4),
+            shortArray((short) 1, (short) 2, (short) 3)));
 
-    Iterator<short[]> it = _factory.stream(file.path(), short[].class);
+    Iterator<short[]> it = _factory.inputStream(file.path(), short[].class);
     summarizeShortArrays(it);
 
     expectedSummary.expect("[3, 6, 4]", "[1, 2, 3]");
@@ -171,10 +170,10 @@ public class FileStreamFactory_Test extends AbstractFileStreamTest {
 
   @Test
   public void testIntArrayFileStream() throws Exception {
-    putIntArrays(intArray(3, 6, 4), intArray(1, 2, 3));
-    file.close();
+    _factory.outputStream(file.path(), int[].class).write(
+        objectIter(intArray(3, 6, 4), intArray(1, 2, 3)));
 
-    Iterator<int[]> it = _factory.stream(file.path(), int[].class);
+    Iterator<int[]> it = _factory.inputStream(file.path(), int[].class);
     summarizeIntArrays(it);
 
     expectedSummary.expect("[3, 6, 4]", "[1, 2, 3]");
@@ -182,10 +181,10 @@ public class FileStreamFactory_Test extends AbstractFileStreamTest {
 
   @Test
   public void testLongArrayFileStream() throws Exception {
-    putLongArrays(longArray(3, 6, 4), longArray(1, 2, 3));
-    file.close();
+    _factory.outputStream(file.path(), long[].class).write(
+        objectIter(longArray(3, 6, 4), longArray(1, 2, 3)));
 
-    Iterator<long[]> it = _factory.stream(file.path(), long[].class);
+    Iterator<long[]> it = _factory.inputStream(file.path(), long[].class);
     summarizeLongArrays(it);
 
     expectedSummary.expect("[3, 6, 4]", "[1, 2, 3]");
@@ -204,7 +203,7 @@ public class FileStreamFactory_Test extends AbstractFileStreamTest {
     r1.d = 12.34567;
     r1.str = "Hello";
     r1.month = Month.AUGUST;
-    r1.strArr = new String[] {"A", "B", "C"};
+    r1.strArr = new String[] { "A", "B", "C" };
 
     Record r2 = new Record();
     r2.b = (byte) 255;
@@ -231,12 +230,10 @@ public class FileStreamFactory_Test extends AbstractFileStreamTest {
     r3.month = Month.FEBRUARY;
     r3.strArr = new String[] {};
 
-    putRecords(r1, r2, r3);
-    file.close();
+    _factory.useGenericObjectSerialization()
+        .outputStream(file.path(), Record.class).write(objectIter(r1, r2, r3));
 
-    Iterator<Record> it = _factory//
-        .useGenericObjectDeserializer() //
-        .stream(file.path(), Record.class);
+    Iterator<Record> it = _factory.inputStream(file.path(), Record.class);
 
     summarizeRecords(it);
 

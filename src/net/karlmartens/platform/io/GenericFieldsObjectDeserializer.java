@@ -29,15 +29,15 @@ import net.karlmartens.platform.io.FileInputStream.ReadBuffer;
  * @author kmartens
  *
  */
-final class GenericObjectDeserializer<T> implements Deserializer<T> {
+final class GenericFieldsObjectDeserializer<T> implements Deserializer<T> {
     
     private final Class<T> _type;
-    private final int nullableBytes;
+    private final int _nullableBytes;
     private final List<Deserializer<?>> _deserializers;
     
-    public GenericObjectDeserializer(Class<T> type, int nullableBytes, List<Deserializer<?>> deserializers) {
+    public GenericFieldsObjectDeserializer(Class<T> type, int nullableBytes, List<Deserializer<?>> deserializers) {
         _type = type;
-        this.nullableBytes = nullableBytes;
+        _nullableBytes = nullableBytes;
         _deserializers = deserializers;
     }
 
@@ -79,7 +79,7 @@ final class GenericObjectDeserializer<T> implements Deserializer<T> {
     }
 
     private BitSet readNullRecord(ReadBuffer buffer) {
-        byte[] rawNullable = new byte[nullableBytes];
+        byte[] rawNullable = new byte[_nullableBytes];
         buffer.getBytes(rawNullable);
         return BitSet.valueOf(rawNullable);
     }
@@ -92,20 +92,13 @@ final class GenericObjectDeserializer<T> implements Deserializer<T> {
             if (!fieldType.isPrimitive())
                 nullable++;
             
-            Deserializer<?> deserializer = deserializerForType(deserializers, fieldType);
+            Deserializer<?> deserializer = deserializers.getDeserializer(fieldType);
             list.add(deserializer);
         }
         
         int nullableBytes = (int)Math.ceil(nullable / 8.0);
         
-        return new GenericObjectDeserializer<>(type, nullableBytes, list);
-    }
-
-    private static Deserializer<?> deserializerForType(Deserializers deserializers, Class<?> type) {
-        if (deserializers.isSupported(type))
-            return deserializers.getDeserializer(type);
-
-        return create(deserializers, type);
+        return new GenericFieldsObjectDeserializer<>(type, nullableBytes, list);
     }
 
 }

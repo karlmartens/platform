@@ -30,17 +30,15 @@ public class ArrayDeserializer implements Deserializer<Object> {
     
     private final Class<?> _componentType;
     private final Deserializer<?> _componentDeserializer;
-    private final IntDeserializer _intDeserializer;
 
-    ArrayDeserializer(Class<?> componentType, Deserializer<?> componentDeserializer) {
+    private ArrayDeserializer(Class<?> componentType, Deserializer<?> componentDeserializer) {
         _componentType = componentType;
         _componentDeserializer = componentDeserializer;
-        _intDeserializer = IntDeserializer.instance();
     }
 
     @Override
     public Object read(ReadBuffer buffer) {
-        int size = _intDeserializer.read(buffer);
+        int size = buffer.getInt();
         Object arr = Array.newInstance(_componentType, size);
         for (int i=0; i<size; i++) {
             Array.set(arr, i, _componentDeserializer.read(buffer));
@@ -48,4 +46,7 @@ public class ArrayDeserializer implements Deserializer<Object> {
         return arr;
     }
 
+    public static ArrayDeserializer create(Class<?> componentType, Deserializer<?> componentDeserializer) {
+      return new ArrayDeserializer(componentType, componentDeserializer);
+    }
 }

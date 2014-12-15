@@ -18,16 +18,13 @@
 
 package net.karlmartens.platform.io;
 
-import java.lang.reflect.Array;
-import java.nio.ByteBuffer;
-import java.nio.charset.Charset;
-import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.Locale;
 
 import net.karlmartens.platform.test.ExpectedSummary;
 import net.karlmartens.platform.test.FileRule;
+import net.karlmartens.platform.util.ArrayIterator;
 import net.karlmartens.platform.util.NullSafe;
 
 import org.junit.Rule;
@@ -43,6 +40,39 @@ public abstract class AbstractFileStreamTest {
 
   @Rule
   public ExpectedSummary expectedSummary = ExpectedSummary.none();
+
+  protected final Iterator<Byte> byteIter(byte... bs) {
+    return ArrayIterator.valueOf(bs);
+  }
+
+  protected final Iterator<Character> charIter(char... cs) {
+    return ArrayIterator.valueOf(cs);
+  }
+
+  protected final Iterator<Short> shortIter(short... ss) {
+    return ArrayIterator.valueOf(ss);
+  }
+
+  protected final Iterator<Integer> intIter(int... is) {
+    return ArrayIterator.valueOf(is);
+  }
+
+  protected final Iterator<Long> longIter(long... ls) {
+    return ArrayIterator.valueOf(ls);
+  }
+
+  protected final Iterator<Float> floatIter(float... fs) {
+    return ArrayIterator.valueOf(fs);
+  }
+
+  protected final Iterator<Double> doubleIter(double... ds) {
+    return ArrayIterator.valueOf(ds);
+  }
+
+  @SafeVarargs
+  protected final <T> Iterator<T> objectIter(T... os) {
+    return new ArrayIterator<T>(os);
+  }
 
   protected final boolean[] boolArray(boolean... arr) {
     return arr;
@@ -114,142 +144,6 @@ public abstract class AbstractFileStreamTest {
           NullSafe.toString(r.str), //
           NullSafe.toString(r.strArr) //
           );
-    }
-  }
-
-  protected final void putBool(boolean bool) {
-    file.putByte(bool ? (byte) 1 : (byte) 0);
-  }
-
-  protected final void putBools(boolean... bools) {
-    for (boolean b : bools) {
-      putBool(b);
-    }
-  }
-
-  protected final void putBoolArray(boolean... arr) {
-    file.putInt(arr.length);
-    putBools(arr);
-  }
-
-  protected final void putBoolArrays(boolean[]... bs) {
-    for (boolean[] b : bs) {
-      putBoolArray(b);
-    }
-  }
-
-  protected final void putString(Charset charset, String str) {
-    ByteBuffer bb = charset.encode(str);
-    file.putInt(bb.remaining());
-    file.put(bb);
-  }
-
-  protected final void putStrings(Charset charset, String... strs) {
-    for (String str : strs) {
-      putString(charset, str);
-    }
-  }
-
-  protected final <T extends Enum<T>> void putEnum(T evalue) {
-    file.putInt(evalue.ordinal());
-  }
-
-  protected final <T extends Enum<T>> void putEnums(
-      @SuppressWarnings("unchecked") T... evalues) {
-    for (T evalue : evalues) {
-      putEnum(evalue);
-    }
-  }
-
-  protected final void putShortArray(short... arr) {
-    file.putInt(arr.length);
-    file.putShorts(arr);
-  }
-
-  protected final void putShortArrays(short[]... ss) {
-    for (short[] s : ss) {
-      putShortArray(s);
-    }
-  }
-
-  protected final void putIntArray(int... arr) {
-    file.putInt(arr.length);
-    file.putInts(arr);
-  }
-
-  protected final void putIntArrays(int[]... as) {
-    for (int[] a : as) {
-      putIntArray(a);
-    }
-  }
-
-  protected final void putLongArray(long... arr) {
-    file.putInt(arr.length);
-    file.putLongs(arr);
-  }
-
-  protected final void putLongArrays(long[]... ls) {
-    for (long[] l : ls) {
-      putLongArray(l);
-    }
-  }
-
-  protected final void putObject(Object o) {
-    if (o == null)
-      return;
-
-    Class<?> type = o.getClass();
-    if (Byte.class.equals(type)) { 
-      file.putByte((Byte) o);
-    } else if (Boolean.class.equals(type)) {
-      putBool((Boolean) o);
-    } else if (Character.class.equals(type)) {
-      file.putChar((Character)o);
-    } else if (Short.class.equals(type)) {
-      file.putShort((Short)o);
-    } else if (Integer.class.equals(type)) {
-      file.putInt((Integer)o);
-    } else if (Long.class.equals(type)) {
-      file.putLong((Long)o);
-    } else if (Float.class.equals(type)) {
-      file.putFloat((Float)o);
-    } else if (Double.class.equals(type)) {
-      file.putDouble((Double)o);
-    } else if (String.class.equals(type)) {
-      putString(StandardCharsets.UTF_8, (String)o);
-    } else if (type.isEnum()) {
-      file.putInt(((Enum<?>)o).ordinal());
-    } else if (type.isArray()) { 
-      int length = Array.getLength(o);
-      file.putInt(length);
-      for (int i = 0; i<length; i++) {
-        putObject(Array.get(o, i));
-      }
-    } else {
-      throw new IllegalStateException();
-    }
-  }
-
-  protected final void putRecord(Record r) {
-    Object[] objs = { r.b, r.bool, r.c, r.s, r.i, r.l, r.f, r.d, r.str, r.month, r.strArr };
-    byte[] nulls = new byte[((int) Math.ceil(objs.length / 8.0))];
-    for (int i = 0; i < objs.length; i++) {
-      if (objs[i] == null) {
-        int idx = i / 8;
-        int bit = i % 8;
-        nulls[idx] |= 1 << bit;
-      }
-    }
-    file.putBytes(nulls);
-
-    for (Object o : objs) {
-      putObject(o);
-    }
-  }
-
-  protected final void putRecords(Record... records) {
-    for (Record r : records) {
-      putRecord(r);
     }
   }
 
