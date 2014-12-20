@@ -75,6 +75,15 @@ class Serializers {
       Serializer<?> serializer = getSerializer(componentType);
       return (Serializer<T>) CollectionSerializer.create(serializer);      
     }
+    
+    if (Map.class.isAssignableFrom(type)) {
+      ParameterizedType pType = (ParameterizedType)field.getGenericType();
+      Class<?> keyType = (Class<?>)pType.getActualTypeArguments()[0];
+      Class<?> valueType = (Class<?>)pType.getActualTypeArguments()[1];
+      Serializer<?> keySerializer = getSerializer(keyType);
+      Serializer<?> valueSerializer = getSerializer(valueType);
+      return (Serializer<T>) MapSerializer.create(keySerializer, valueSerializer);      
+    }
 
     return getSerializer(type);
   }

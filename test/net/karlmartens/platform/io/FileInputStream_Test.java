@@ -23,9 +23,13 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Iterator;
+import java.util.LinkedHashMap;
+import java.util.Map;
 import java.util.Queue;
 import java.util.Set;
+import java.util.SortedMap;
 import java.util.SortedSet;
+import java.util.TreeMap;
 
 import org.junit.Test;
 
@@ -156,35 +160,42 @@ public class FileInputStream_Test extends AbstractFileStreamTest {
         "JUNE", "JULY", "AUGUST", "SEPTEMBER", "OCTOBER", "NOVEMBER",
         "DECEMBER");
   }
-  
+
   @Test
   public void testCollection() throws Exception {
-    FileOutputStream.create(file.path(), CollectionSerializer.create(IntSerializer.instance()))//
-    .write(objectIter(Arrays.asList(4, 3, 7, 3)));
+    FileOutputStream.create(file.path(),
+        CollectionSerializer.create(IntSerializer.instance()))//
+        .write(objectIter(Arrays.asList(4, 3, 7, 3)));
 
-    Iterator<Collection<Integer>> it = FileInputStream.create(file.path(),
-        CollectionDeserializer.create(Collection.class, IntDeserializer.instance()));
+    Iterator<Collection<Integer>> it = FileInputStream.create(
+        file.path(),
+        CollectionDeserializer.create(Collection.class,
+            IntDeserializer.instance()));
     summarize(it);
 
     expectedSummary.expect("[4, 3, 7, 3]");
   }
-  
+
   @Test
   public void testSortedSet() throws Exception {
-    FileOutputStream.create(file.path(), CollectionSerializer.create(IntSerializer.instance()))//
-    .write(objectIter(Arrays.asList(4, 3, 7, 3)));
+    FileOutputStream.create(file.path(),
+        CollectionSerializer.create(IntSerializer.instance()))//
+        .write(objectIter(Arrays.asList(4, 3, 7, 3)));
 
-    Iterator<SortedSet<Integer>> it = FileInputStream.create(file.path(),
-        CollectionDeserializer.create(SortedSet.class, IntDeserializer.instance()));
+    Iterator<SortedSet<Integer>> it = FileInputStream.create(
+        file.path(),
+        CollectionDeserializer.create(SortedSet.class,
+            IntDeserializer.instance()));
     summarize(it);
 
     expectedSummary.expect("[3, 4, 7]");
   }
-  
+
   @Test
   public void testSet() throws Exception {
-    FileOutputStream.create(file.path(), CollectionSerializer.create(IntSerializer.instance()))//
-    .write(objectIter(Arrays.asList(4, 3, 7, 3)));
+    FileOutputStream.create(file.path(),
+        CollectionSerializer.create(IntSerializer.instance()))//
+        .write(objectIter(Arrays.asList(4, 3, 7, 3)));
 
     Iterator<Set<Integer>> it = FileInputStream.create(file.path(),
         CollectionDeserializer.create(Set.class, IntDeserializer.instance()));
@@ -192,11 +203,12 @@ public class FileInputStream_Test extends AbstractFileStreamTest {
 
     expectedSummary.expect("[4, 3, 7]");
   }
-  
+
   @Test
   public void testQueue() throws Exception {
-    FileOutputStream.create(file.path(), CollectionSerializer.create(IntSerializer.instance()))//
-    .write(objectIter(Arrays.asList(4, 3, 7, 3)));
+    FileOutputStream.create(file.path(),
+        CollectionSerializer.create(IntSerializer.instance()))//
+        .write(objectIter(Arrays.asList(4, 3, 7, 3)));
 
     Iterator<Queue<Integer>> it = FileInputStream.create(file.path(),
         CollectionDeserializer.create(Queue.class, IntDeserializer.instance()));
@@ -204,17 +216,83 @@ public class FileInputStream_Test extends AbstractFileStreamTest {
 
     expectedSummary.expect("[4, 3, 7, 3]");
   }
-  
+
   @Test
   public void testArrayList() throws Exception {
-    FileOutputStream.create(file.path(), CollectionSerializer.create(IntSerializer.instance()))//
-    .write(objectIter(Arrays.asList(4, 3, 7, 3)));
+    FileOutputStream.create(file.path(),
+        CollectionSerializer.create(IntSerializer.instance()))//
+        .write(objectIter(Arrays.asList(4, 3, 7, 3)));
 
-    Iterator<ArrayList<Integer>> it = FileInputStream.create(file.path(),
-        CollectionDeserializer.create(ArrayList.class, IntDeserializer.instance()));
+    Iterator<ArrayList<Integer>> it = FileInputStream.create(
+        file.path(),
+        CollectionDeserializer.create(ArrayList.class,
+            IntDeserializer.instance()));
     summarize(it);
 
     expectedSummary.expect("[4, 3, 7, 3]");
+  }
+
+  @Test
+  public void testMap() throws Exception {
+    Map<Integer, Character> map = new LinkedHashMap<>();
+    map.put(2, 'B');
+    map.put(1, 'A');
+    map.put(3, 'C');
+
+    FileOutputStream.create(
+        file.path(),
+        MapSerializer.create(IntSerializer.instance(),
+            CharSerializer.instance()))//
+        .write(objectIter(map));
+
+    Iterator<Map<Integer, Character>> it = FileInputStream.create(file.path(),
+        MapDeserializer.create(Map.class, IntDeserializer.instance(),
+            CharDeserializer.instance()));
+    summarize(it);
+
+    expectedSummary.expect("{2=B, 1=A, 3=C}");
+  }
+
+  @Test
+  public void testSortedMap() throws Exception {
+    Map<Integer, Character> map = new LinkedHashMap<>();
+    map.put(2, 'B');
+    map.put(1, 'A');
+    map.put(3, 'C');
+
+    FileOutputStream.create(
+        file.path(),
+        MapSerializer.create(IntSerializer.instance(),
+            CharSerializer.instance()))//
+        .write(objectIter(map));
+
+    Iterator<SortedMap<Integer, Character>> it = FileInputStream.create(file.path(),
+        MapDeserializer.create(SortedMap.class, IntDeserializer.instance(),
+            CharDeserializer.instance()));
+    summarize(it);
+
+    expectedSummary.expect("{1=A, 2=B, 3=C}");
+  }
+
+  @Test
+  public void testTreeMap() throws Exception {
+    Map<Integer, Character> map = new LinkedHashMap<>();
+    map.put(2, 'B');
+    map.put(1, 'A');
+    map.put(3, 'C');
+
+    FileOutputStream.create(
+        file.path(),
+        MapSerializer.create(IntSerializer.instance(),
+            CharSerializer.instance()))//
+        .write(objectIter(map));
+
+    Iterator<TreeMap<Integer, Character>> it = FileInputStream.create(file.path(),
+        MapDeserializer.create(TreeMap.class, IntDeserializer.instance(),
+            CharDeserializer.instance()));
+    summarize(it);
+
+    expectedSummary.expect("{1=A, 2=B, 3=C}");
   }
 
   @Test
@@ -265,9 +343,9 @@ public class FileInputStream_Test extends AbstractFileStreamTest {
     expectedSummary
         .expect(
             //
-            "  23  true    d 32000     321000          4000000000  12.230000    12.34567000    AUGUST      Hello       null       null", //
-            " 255 false    r 15000     150000          8000000000  24.459999    24.69134000  FEBRUARY      World       null       null", //
-            "null false    r 15000     150000          8000000000  24.459999           null  FEBRUARY       null       null       null" //
+            "  23  true    d 32000     321000          4000000000  12.230000    12.34567000    AUGUST      Hello       null       null            null", //
+            " 255 false    r 15000     150000          8000000000  24.459999    24.69134000  FEBRUARY      World       null       null            null", //
+            "null false    r 15000     150000          8000000000  24.459999           null  FEBRUARY       null       null       null            null" //
         );
   }
 

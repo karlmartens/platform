@@ -131,7 +131,7 @@ public abstract class AbstractFileStreamTest {
     while (it.hasNext()) {
       Record r = it.next();
       expectedSummary.actual(
-          "%1$4s %2$5s %3$4s %4$5s %5$10s %6$19s %7$10s %8$14s %9$9s %10$10s %11$10s %12$10s",
+          "%1$4s %2$5s %3$4s %4$5s %5$10s %6$19s %7$10s %8$14s %9$9s %10$10s %11$10s %12$10s %13$15s",
           r.b == null ? null : r.b & 0xff, //
           NullSafe.toString(r.bool), //
           NullSafe.toString(r.c), //
@@ -143,7 +143,8 @@ public abstract class AbstractFileStreamTest {
           NullSafe.toString(r.month), //
           NullSafe.toString(r.str), //
           NullSafe.toString(r.strArr), //
-          NullSafe.toString(r.strCol)
+          NullSafe.toString(r.strCol), //
+          NullSafe.toString(r.map)
           );
     }
   }

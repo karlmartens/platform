@@ -77,6 +77,16 @@ final class Deserializers {
         Deserializer<?> deserializer = getDeserializer(componentType);
         return (Deserializer<T>) CollectionDeserializer.create(type, deserializer);
       }
+      
+      if (Map.class.isAssignableFrom(type)) {
+        ParameterizedType pType = (ParameterizedType)field.getGenericType();
+        Class<?> keyType = (Class<?>)pType.getActualTypeArguments()[0];
+        Class<?> valueType = (Class<?>)pType.getActualTypeArguments()[1];
+        Deserializer<?> keyDeserializer = getDeserializer(keyType);
+        Deserializer<?> valueDeserializer = getDeserializer(valueType);
+        return (Deserializer<T>) MapDeserializer.create(type, keyDeserializer, valueDeserializer);
+      }
+      
       return getDeserializer(type);
     }
 

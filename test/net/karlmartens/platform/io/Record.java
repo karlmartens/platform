@@ -20,24 +20,26 @@ package net.karlmartens.platform.io;
 
 import java.time.Month;
 import java.util.Collection;
+import java.util.Map;
 
 /**
  * @author kmartens
  *
  */
 final class Record {
-	
-	public Byte b;
-	public Boolean bool;
-	public Character c;
-	public Short s;
-	public Integer i;
-	public Long l;
-	public Float f;
-	public Double d;
-	public String str;
-	public Month month;
-	public String[] strArr;
-	public Collection<String> strCol;
-	
+
+  public Byte b;
+  public Boolean bool;
+  public Character c;
+  public Short s;
+  public Integer i;
+  public Long l;
+  public Float f;
+  public Double d;
+  public String str;
+  public Month month;
+  public String[] strArr;
+  public Collection<String> strCol;
+  public Map<Character, Integer> map;
+
 }
