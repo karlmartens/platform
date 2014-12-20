@@ -18,6 +18,9 @@
 
 package net.karlmartens.platform.io;
 
+import java.lang.reflect.Field;
+import java.lang.reflect.ParameterizedType;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
@@ -63,6 +66,18 @@ final class Deserializers {
 
         throw new IllegalStateException(String.format(Locale.US,
                 "No deserializer for the type '%s'.", type));
+    }
+
+    @SuppressWarnings("unchecked")
+    public <T> Deserializer<T> getDeserializer(Field field) {
+      Class<T> type = (Class<T>)field.getType();
+      if (Collection.class.isAssignableFrom(type)) {
+        ParameterizedType pType = (ParameterizedType)field.getGenericType();
+        Class<?> componentType = (Class<?>)pType.getActualTypeArguments()[0];
+        Deserializer<?> deserializer = getDeserializer(componentType);
+        return (Deserializer<T>) CollectionDeserializer.create(type, deserializer);
+      }
+      return getDeserializer(type);
     }
 
 }

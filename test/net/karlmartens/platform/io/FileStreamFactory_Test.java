@@ -19,6 +19,7 @@
 package net.karlmartens.platform.io;
 
 import java.time.Month;
+import java.util.Arrays;
 import java.util.Iterator;
 
 import org.junit.Test;
@@ -204,6 +205,7 @@ public class FileStreamFactory_Test extends AbstractFileStreamTest {
     r1.str = "Hello";
     r1.month = Month.AUGUST;
     r1.strArr = new String[] { "A", "B", "C" };
+    r1.strCol = Arrays.asList("1", "2", "3");
 
     Record r2 = new Record();
     r2.b = (byte) 255;
@@ -240,9 +242,9 @@ public class FileStreamFactory_Test extends AbstractFileStreamTest {
     expectedSummary
         .expect(
             //
-            "  23  true    d 32000     321000          4000000000  12.230000    12.34567000    AUGUST      Hello  [A, B, C]", //
-            " 255 false    r 15000     150000          8000000000  24.459999    24.69134000  FEBRUARY      World       null", //
-            "null false    r 15000     150000          8000000000  24.459999           null  FEBRUARY       null         []" //
+            "  23  true    d 32000     321000          4000000000  12.230000    12.34567000    AUGUST      Hello  [A, B, C]  [1, 2, 3]", //
+            " 255 false    r 15000     150000          8000000000  24.459999    24.69134000  FEBRUARY      World       null       null", //
+            "null false    r 15000     150000          8000000000  24.459999           null  FEBRUARY       null         []       null" //
         );
   }
 

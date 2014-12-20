@@ -82,9 +82,8 @@ public class GenericFieldsObjectSerializer<T> implements Serializer<T> {
       if (!fieldType.isPrimitive())
         nullable++;
 
-      @SuppressWarnings("unchecked")
       Serializer<Object> serializer = (Serializer<Object>) serializers
-          .getSerializer(fieldType);
+          .getSerializer(field);
       list.add(serializer);
     }
 

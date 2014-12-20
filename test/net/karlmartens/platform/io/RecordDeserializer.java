@@ -19,6 +19,7 @@
 package net.karlmartens.platform.io;
 
 import java.time.Month;
+import java.util.Collection;
 
 import net.karlmartens.platform.io.FileInputStream.ReadBuffer;
 
@@ -42,6 +43,8 @@ final class RecordDeserializer implements Deserializer<Record> {
       .instance();
   private final EnumDeserializer<Month> _monthReader = EnumDeserializer
       .create(Month.class);
+  private final Deserializer<Collection<String>> _strColReader = CollectionDeserializer.<Collection<String>, String>create
+      (Collection.class, StringDeserializer.instance());
 
   @Override
   public Record read(ReadBuffer buffer) {
@@ -59,6 +62,7 @@ final class RecordDeserializer implements Deserializer<Record> {
     r.d = testNull(7, nulls) ? null : _doubleReader.read(buffer);
     r.str = testNull(8, nulls) ? null : _stringReader.read(buffer);
     r.month = testNull(9, nulls) ? null : _monthReader.read(buffer);
+    r.strCol = testNull(10, nulls) ? null : _strColReader.read(buffer);
     return r;
   }
 

@@ -92,7 +92,7 @@ final class GenericFieldsObjectDeserializer<T> implements Deserializer<T> {
             if (!fieldType.isPrimitive())
                 nullable++;
             
-            Deserializer<?> deserializer = deserializers.getDeserializer(fieldType);
+            Deserializer<?> deserializer = deserializers.getDeserializer(field);
             list.add(deserializer);
         }
         

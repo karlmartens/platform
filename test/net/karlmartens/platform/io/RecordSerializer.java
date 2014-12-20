@@ -19,6 +19,7 @@
 package net.karlmartens.platform.io;
 
 import java.nio.ByteBuffer;
+import java.util.Collection;
 
 import net.karlmartens.platform.io.FileOutputStream.WriteBuffer;
 
@@ -30,7 +31,7 @@ final class RecordSerializer implements Serializer<Record> {
 
   @Override
   public void write(WriteBuffer buffer, Record r) {
-    Object[] objs = { r.b, r.bool, r.c, r.s, r.i, r.l, r.f, r.d, r.str, r.month, r.strArr };
+    Object[] objs = { r.b, r.bool, r.c, r.s, r.i, r.l, r.f, r.d, r.str, r.month, r.strArr, r.strCol };
     byte[] nulls = new byte[((int) Math.ceil(objs.length / 8.0))];
     for (int i = 0; i < objs.length; i++) {
       if (objs[i] == null) {
@@ -91,6 +92,10 @@ final class RecordSerializer implements Serializer<Record> {
       Class<?> componentType = type.getComponentType();
       Serializer<?> componentSerializer = serializerForType(componentType);
       return ArraySerializer.create(componentSerializer);
+    }
+    
+    if (Collection.class.isAssignableFrom(type)) {
+      return CollectionSerializer.create(StringSerializer.instance());
     }
 
       throw new IllegalStateException();

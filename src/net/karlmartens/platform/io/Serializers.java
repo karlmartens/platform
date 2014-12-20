@@ -18,6 +18,9 @@
 
 package net.karlmartens.platform.io;
 
+import java.lang.reflect.Field;
+import java.lang.reflect.ParameterizedType;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
@@ -61,6 +64,19 @@ class Serializers {
 
     throw new IllegalStateException(String.format(Locale.US,
         "No serializer for the type '%s'.", type));
+  }
+
+  @SuppressWarnings("unchecked")
+  public <T> Serializer<T> getSerializer(Field field) {
+    Class<T> type = (Class<T>) field.getType();
+    if (Collection.class.isAssignableFrom(type)) {
+      ParameterizedType pType = (ParameterizedType)field.getGenericType();
+      Class<?> componentType = (Class<?>)pType.getActualTypeArguments()[0];
+      Serializer<?> serializer = getSerializer(componentType);
+      return (Serializer<T>) CollectionSerializer.create(serializer);      
+    }
+
+    return getSerializer(type);
   }
 
 }

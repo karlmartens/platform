@@ -18,26 +18,32 @@
 
 package net.karlmartens.platform.io;
 
-import java.time.Month;
 import java.util.Collection;
+
+import net.karlmartens.platform.io.FileOutputStream.WriteBuffer;
 
 /**
  * @author kmartens
  *
  */
-final class Record {
-	
-	public Byte b;
-	public Boolean bool;
-	public Character c;
-	public Short s;
-	public Integer i;
-	public Long l;
-	public Float f;
-	public Double d;
-	public String str;
-	public Month month;
-	public String[] strArr;
-	public Collection<String> strCol;
-	
+final class CollectionSerializer<T> implements Serializer<Collection<T>> {
+  
+  private final Serializer<T> _serializer;
+  
+  private CollectionSerializer(Serializer<T> serializer) {
+    _serializer = serializer;
+  }
+
+  @Override
+  public void write(WriteBuffer buffer, Collection<T> value) {
+    buffer.putInt(value.size());
+    for (T item : value) {
+      _serializer.write(buffer, item);
+    }
+  }
+
+  public static <T> Serializer<Collection<T>> create(Serializer<T> serializer) {
+    return new CollectionSerializer<>(serializer);
+  }
+  
 }
